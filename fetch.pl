@@ -5,6 +5,9 @@ use 5.010;
 
 use Data::Dumper qw(Dumper);
 use Mojo::UserAgent;
+use Mojo::JSON qw(decode_json encode_json);
+use Path::Tiny qw(path);
+use YAML qw(Load);
 
 
 my $token_file = 'token.txt';
@@ -15,8 +18,17 @@ main();
 
 
 sub main {
-    #my $user = get_user('szabgab');
-    say Dumper get_repos('szabgab');
+    my $config = Load( path('config.yml')->slurp );
+    #die Dumper $config;
+    for my $username (@{ $config->{users} }) {
+        say $username;
+        my $user = get_user($username);
+        store_user($username, $user);
+    }
+    #exit;
+
+    #say Dumper get_repos('szabgab');
+    #say Dumper get_repos('');
     # homepage
     # size
     #           {
@@ -75,6 +87,24 @@ sub _get {
     return $res->json;
 }
 
+sub store_user {
+    my ($username, $user) = @_;
+    #say Dumper $user;
+    path('data')->mkpath;
+    my $users_file = 'data/users.json';
+    my $data = {};
+    if (-e $users_file) {
+        $data = decode_json( path($users_file)->slurp_utf8 );
+    }
+    my %this;
+    my @user_fields = ('public_repos', 'avatar_url', 'twitter_username', 'name', 'type', 'email' );
+    for my $field (@user_fields) {
+        $this{$field} = $user->{$field};
+    }
+    $data->{$username} = \%this;
+
+    path($users_file)->spew_utf8(encode_json($data));
+}
 
 
 
