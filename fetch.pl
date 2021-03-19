@@ -24,33 +24,19 @@ sub main {
         say $username;
         my $user = get_user($username);
         store_user($username, $user);
-    }
-    #exit;
 
-    #say Dumper get_repos('szabgab');
-    #say Dumper get_repos('');
-    # homepage
-    # size
+        my $repos = get_repos($username);
+        #die Dumper $repos;
+        store_repos($username, $repos)
+    }
     #           {
     #        'size' => 160,
     #        'homepage' => '',
-    #        'owner' => {
-    #                     'login' => 'szabgab',
-    #                     'id' => 48833,
-    #                     'type' => 'User',
-    #                   },
     #        'forks' => 0,
     #        'open_issues' => 0,
     #        'has_issues' => $VAR1->[0]{'has_projects'},
-    #        'pushed_at' => '2014-09-03T09:14:03Z',
-    #        'archived' => $VAR1->[0]{'private'},
     #        'forks_count' => 0,
-    #        'url' => 'https://api.github.com/repos/szabgab/Code-Explain',
     #        'watchers' => 2,
-    #        'full_name' => 'szabgab/Code-Explain',
-    #        'html_url' => 'https://github.com/szabgab/Code-Explain',
-    #        'default_branch' => 'master',
-    #        'git_url' => 'git://github.com/szabgab/Code-Explain.git',
     #        'updated_at' => '2014-09-03T09:14:03Z',
     #        'fork' => $VAR1->[0]{'private'},
     #        'created_at' => '2011-02-25T07:57:10Z',
@@ -60,7 +46,6 @@ sub main {
     #        'open_issues_count' => 0,
     #        'node_id' => 'MDEwOlJlcG9zaXRvcnkxNDEwMDU3',
     #        'stargazers_count' => 2,
-    #        'name' => 'Code-Explain',
     #        'watchers_count' => 2,
     #        'has_pages' => $VAR1->[0]{'private'},
     #        'language' => 'Perl',
@@ -87,6 +72,31 @@ sub _get {
     return $res->json;
 }
 
+sub store_repos {
+    my ($username, $repos) = @_;
+
+    path('data')->mkpath;
+
+    my $filename = 'data/repos.json';
+    my $data = {};
+    if (-e $filename) {
+        $data = decode_json( path($filename)->slurp_utf8 );
+    }
+    $data->{$username} = {};
+
+    my %this;
+    my @repo_fields = ('name', 'homepage', 'size', 'default_branch', 'pushed_at');
+    for my $repo (@$repos) {
+        for my $field (@repo_fields) {
+            $this{$field} = $repo->{$field};
+        }
+        $data->{$username}{ $this{name} } = \%this;
+    }
+
+
+    path($filename)->spew_utf8(encode_json($data));
+}
+
 sub store_user {
     my ($username, $user) = @_;
     #say Dumper $user;
@@ -97,7 +107,7 @@ sub store_user {
         $data = decode_json( path($users_file)->slurp_utf8 );
     }
     my %this;
-    my @user_fields = ('public_repos', 'avatar_url', 'twitter_username', 'name', 'type', 'email' );
+    my @user_fields = ('public_repos', 'avatar_url', 'twitter_username', 'name', 'type', 'email');
     for my $field (@user_fields) {
         $this{$field} = $user->{$field};
     }
