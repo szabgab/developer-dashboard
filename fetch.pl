@@ -25,20 +25,17 @@ sub main {
         my $user = get_user($username);
         store_user($username, $user);
 
-        my $repos = get_repos($username);
+        my $repos = get_repos($username, $user->{public_repos});
         #die Dumper $repos;
         store_repos($username, $repos)
     }
     #           {
-    #        'size' => 160,
-    #        'homepage' => '',
     #        'forks' => 0,
     #        'open_issues' => 0,
     #        'has_issues' => $VAR1->[0]{'has_projects'},
     #        'forks_count' => 0,
     #        'watchers' => 2,
     #        'updated_at' => '2014-09-03T09:14:03Z',
-    #        'fork' => $VAR1->[0]{'private'},
     #        'created_at' => '2011-02-25T07:57:10Z',
     #        'description' => 'Explain some Perl code',
     #        'id' => 1410057,
@@ -53,8 +50,17 @@ sub main {
 }
 
 sub get_repos {
-    my ($username) = @_;
-    _get("/users/$username/repos")
+    my ($username, $public_repos) = @_;
+    # https://docs.github.com/en/rest/reference/repos#list-repositories-for-a-user
+    # We can only fetch the repos 100 max, so we need to ask for them several times.
+    my $per_page = 100;  # max
+    my @repos;
+    for my $page (1 .. 1 + int(($public_repos-1) / $per_page)) {
+        say $page;
+        my $ref = _get("/users/$username/repos?per_page=$per_page&page=$page");
+        push @repos, @$ref;
+    }
+    return \@repos;
 }
 
 sub get_user {
@@ -84,7 +90,7 @@ sub store_repos {
     }
     $data->{$username} = {};
 
-    my @repo_fields = ('name', 'homepage', 'size', 'default_branch', 'pushed_at');
+    my @repo_fields = ('name', 'homepage', 'size', 'default_branch', 'pushed_at', 'fork');
     for my $repo (@$repos) {
         my %this;
         for my $field (@repo_fields) {
@@ -92,7 +98,6 @@ sub store_repos {
         }
         $data->{$username}{ $this{name} } = \%this;
     }
-
 
     path($filename)->spew_utf8(encode_json($data));
 }
