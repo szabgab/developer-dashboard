@@ -43,3 +43,7 @@ __DATA__
        <%= $user->{name} %>
    </a>
 
+   <% if ($user->{twitter_username}) { %>
+       <a href="https://twitter.com/<%= $user->{twitter_username} %>">@<%= $user->{twitter_username} %></a>
+   <% } %>
+
