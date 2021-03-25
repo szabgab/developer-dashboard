@@ -14,9 +14,9 @@ get '/github/:name' => sub ($c) {
     my $name = $c->stash('name');
 
     my $users = decode_json(path('data/users.json')->slurp_utf8);
-    $c->render(template => 'user', name => $name, user => $users->{$name});
+    my $repos = decode_json(path('data/repos.json')->slurp_utf8);
+    $c->render(template => 'user', name => $name, user => $users->{$name}, repos => $repos->{$name});
 };
-
 
 app->start;
 __DATA__
@@ -38,12 +38,29 @@ __DATA__
 
 @@ user.html.ep
 
-   <a href="https://github.com/<%= $name %>">
-       <img class="avatar" src="<%= $user->{avatar_url} %>">
-       <%= $user->{name} %>
-   </a>
+<a href="https://github.com/<%= $name %>">
+    <img class="avatar" src="<%= $user->{avatar_url} %>">
+    <%= $user->{name} %>
+</a>
 
-   <% if ($user->{twitter_username}) { %>
-       <a href="https://twitter.com/<%= $user->{twitter_username} %>">@<%= $user->{twitter_username} %></a>
-   <% } %>
+<% if ($user->{twitter_username}) { %>
+    <a href="https://twitter.com/<%= $user->{twitter_username} %>">@<%= $user->{twitter_username} %></a>
+<% } %>
+
+<h2>Repositories</h2>
+
+<table>
+   <tr>
+      <th>Repo</th>
+      <th>Homepage</th>
+      <th>Pushed AT</th>
+   </tr>
+<% for my $repo_name (sort keys %$repos) { %>
+   <tr>
+      <td><a href="https://github.com/<%= $name %>/<%= $repo_name %>"><%= $repo_name %></a></td>
+      <td><%= $repos->{$repo_name}{homepage} %></td>
+      <td><%= $repos->{$repo_name}{pushed_at} %></td>
+   </tr>
+<% } %>
+</table>
 
