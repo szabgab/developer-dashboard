@@ -49,6 +49,8 @@ __DATA__
 
 <h2>Repositories</h2>
 
+Public repos: <%= $user->{public_repos} %>
+
 <table>
    <tr>
       <th>Repo</th>
@@ -58,7 +60,7 @@ __DATA__
 <% for my $repo_name (sort keys %$repos) { %>
    <tr>
       <td><a href="https://github.com/<%= $name %>/<%= $repo_name %>"><%= $repo_name %></a></td>
-      <td><%= $repos->{$repo_name}{homepage} %></td>
+      <td><a href="<%= $repos->{$repo_name}{homepage} %>"><%= $repos->{$repo_name}{homepage} %></a></td>
       <td><%= $repos->{$repo_name}{pushed_at} %></td>
    </tr>
 <% } %>
