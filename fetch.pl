@@ -84,9 +84,9 @@ sub store_repos {
     }
     $data->{$username} = {};
 
-    my %this;
     my @repo_fields = ('name', 'homepage', 'size', 'default_branch', 'pushed_at');
     for my $repo (@$repos) {
+        my %this;
         for my $field (@repo_fields) {
             $this{$field} = $repo->{$field};
         }
