@@ -12,6 +12,16 @@ e.g mine looks like this:
 szabgab:119aa1a77f35f9456758793dkahfjahfkjahk1
 ```
 
+
+Create a file called `config.yml` in the root of the project listing the github usernames you'd like to fetch.
+
+```
+github:
+   - szabgab
+   - arielszabo
+```
+
+
 Run the script to fetch data:
 
 ```
@@ -38,6 +48,7 @@ docker-compose run web bash
 
 * Are there pull-requests waiting for me?
 * Are there open issues waiting for me?
+* List all the pull-requests I sent. (show only the ones that have not been integrated yet)
 * Which CI system do I have set up for the repository?
 * [Get community profile metrics](https://docs.github.com/en/rest/reference/repos#get-community-profile-metrics)
 
