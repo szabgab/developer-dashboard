@@ -20,7 +20,7 @@ main();
 sub main {
     my $config = Load( path('config.yml')->slurp );
     #die Dumper $config;
-    for my $username (@{ $config->{users} }) {
+    for my $username (@{ $config->{github} }) {
         say $username;
         my $user = get_user($username);
         store_user($username, $user);
