@@ -14,7 +14,7 @@ get '/github/:name' => sub ($c) {
     my $name = $c->stash('name');
 
     my $users = decode_json(path('data/users.json')->slurp_utf8);
-    $c->render(template => 'user', user => $users->{$name});
+    $c->render(template => 'user', name => $name, user => $users->{$name});
 };
 
 
@@ -38,7 +38,7 @@ __DATA__
 
 @@ user.html.ep
 
-   <a href="https://github.com/<%= $user %>">
+   <a href="https://github.com/<%= $name %>">
        <img class="avatar" src="<%= $user->{avatar_url} %>">
        <%= $user->{name} %>
    </a>
