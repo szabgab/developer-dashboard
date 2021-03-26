@@ -1,0 +1,14 @@
+<style>
+.avatar {
+   width: 80px;
+}
+</style>
+<h1>Users</h1>
+<% for my $user (sort keys %{ $users }) { %>
+   <hr>
+   <a href="/github/<%= $user %>">
+       <img class="avatar" src="<%= $users->{$user}{avatar_url} %>">
+       <%= $users->{$user}{name} %>
+   </a>
+<% } %>
+
