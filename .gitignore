@@ -1,3 +1,6 @@
 /token.txt
 /data/
 /config.yml
+/node_modules/
+
+/public/bulma.css

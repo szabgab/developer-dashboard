@@ -54,4 +54,12 @@ docker-compose run web bash
 * [GitHub API reference](https://docs.github.com/en/rest/reference)
 
 
+## CSS
+
+Generate CSS file (public/bulma.css) from SCSS file (sass/mystles.scss):
+
+```
+npm install
+npm run css-build
+```
 
