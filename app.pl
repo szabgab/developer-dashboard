@@ -7,9 +7,14 @@ use List::Util qw(sum0);
 
 
 get '/' => sub ($c) {
+    $c->render(template => 'main');
+};
+
+get '/github' => sub ($c) {
     my $users = decode_json(path('data/users.json')->slurp_utf8);
     $c->render(template => 'users', users => $users);
 };
+
 
 get '/github/:name' => sub ($c) {
     my $name = $c->stash('name');
