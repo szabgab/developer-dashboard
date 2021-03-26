@@ -29,24 +29,6 @@ sub main {
         #die Dumper $repos;
         store_repos($username, $repos)
     }
-    #           {
-    #        'forks' => 0,
-    #        'open_issues' => 0,
-    #        'has_issues' => $VAR1->[0]{'has_projects'},
-    #        'forks_count' => 0,
-    #        'watchers' => 2,
-    #        'updated_at' => '2014-09-03T09:14:03Z',
-    #        'created_at' => '2011-02-25T07:57:10Z',
-    #        'description' => 'Explain some Perl code',
-    #        'id' => 1410057,
-    #        'license' => undef,
-    #        'open_issues_count' => 0,
-    #        'node_id' => 'MDEwOlJlcG9zaXRvcnkxNDEwMDU3',
-    #        'stargazers_count' => 2,
-    #        'watchers_count' => 2,
-    #        'has_pages' => $VAR1->[0]{'private'},
-    #        'language' => 'Perl',
-    #      },
 }
 
 sub get_repos {
@@ -90,7 +72,9 @@ sub store_repos {
     }
     $data->{$username} = {};
 
-    my @repo_fields = ('name', 'homepage', 'size', 'default_branch', 'pushed_at', 'fork');
+    my @repo_fields = ('name', 'homepage', 'size', 'default_branch', 'pushed_at',
+        'fork', 'description', 'forks', 'open_issues', 'has_issues',
+        'forks_count', 'license', 'open_issues_count', 'has_pages', 'language');
     for my $repo (@$repos) {
         my %this;
         for my $field (@repo_fields) {
