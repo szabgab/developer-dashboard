@@ -1,10 +1,7 @@
 % title 'Developer Dashboard'
 % layout 'dashboard';
-<style>
-.avatar {
-   width: 80px;
-}
-</style>
+
+
 <h1>Users</h1>
 <% for my $user (sort keys %{ $users }) { %>
    <hr>
