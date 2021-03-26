@@ -25,7 +25,7 @@ github:
 Run the script to fetch data:
 
 ```
-perl fetch.pl
+docker-compose exec fetch perl fetch.pl
 ```
 
 ```

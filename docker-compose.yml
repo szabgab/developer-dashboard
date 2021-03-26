@@ -8,4 +8,11 @@ services:
       - .:/opt
     ports:
       - "3000:3000"
-
+  fetch:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    volumes:
+      - .:/opt
+    stdin_open: true
+    tty: true
