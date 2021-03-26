@@ -1,3 +1,6 @@
+% title "Dashboard of " . ($user->{name} // $name);
+% layout 'dashboard';
+
 <a href="https://github.com/<%= $name %>">
     <img class="avatar" src="<%= $user->{avatar_url} %>">
     <%= $user->{name} %>
