@@ -23,6 +23,7 @@ Open issues: <%= $open_issues %><br>
       <th>Fork</th>
       <th>Issues</th>
       <th>Description</th>
+      <th>default branch</th>
       <th>Pushed AT</th>
    </tr>
 <% for my $repo_name (sort keys %$repos) { %>
@@ -32,6 +33,7 @@ Open issues: <%= $open_issues %><br>
       <td><% if ($repos->{$repo_name}{fork}) { %>1<% } %></td>
       <td><%= $repos->{$repo_name}{open_issues} %></td>
       <td><%= $repos->{$repo_name}{description} %></td>
+      <td><%= $repos->{$repo_name}{default_branch} %></td>
       <td><%= $repos->{$repo_name}{pushed_at} %></td>
    </tr>
 <% } %>
