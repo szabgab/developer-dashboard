@@ -16,8 +16,10 @@ Public repos: <%= $user->{public_repos} %><br>
 Listed here: <%= scalar keys %$repos %> <br>
 Open issues: <%= $open_issues %><br>
 
-<table>
-   <tr>
+<div class="table-container">
+<table class="table is-hoverable">
+  <thead>
+    <tr>
       <th>Repo</th>
       <th>Homepage</th>
       <th>Fork</th>
@@ -25,9 +27,11 @@ Open issues: <%= $open_issues %><br>
       <th>Description</th>
       <th>default branch</th>
       <th>Pushed AT</th>
-   </tr>
+    </tr>
+  </thead>
+  <tbody>
 <% for my $repo_name (sort keys %$repos) { %>
-   <tr>
+    <tr>
       <td><a href="https://github.com/<%= $name %>/<%= $repo_name %>"><%= $repo_name %></a></td>
       <td><a href="<%= $repos->{$repo_name}{homepage} %>"><%= $repos->{$repo_name}{homepage} %></a></td>
       <td><% if ($repos->{$repo_name}{fork}) { %>1<% } %></td>
@@ -35,7 +39,9 @@ Open issues: <%= $open_issues %><br>
       <td><%= $repos->{$repo_name}{description} %></td>
       <td><%= $repos->{$repo_name}{default_branch} %></td>
       <td><%= $repos->{$repo_name}{pushed_at} %></td>
-   </tr>
+    </tr>
 <% } %>
+  </tbody>
 </table>
+</div>
 
