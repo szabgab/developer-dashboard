@@ -1,3 +1,6 @@
 % title "Developer Dashboard";
 % layout 'dashboard';
 
+<div>
+<a href="https://github.com/login/oauth/authorize?scope=user:email&client_id=<%= $github_client_id %>">Login with GitHub</a></a>
+</div>

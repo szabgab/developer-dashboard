@@ -48,6 +48,12 @@ docker-compose run web bash
 * GET /repos/:owner/:repo/git/commits/:sha
 
 
+login using GitHub on the response store the access token in the session and also store it in our "database" so we can use it even without the user being present.
+Implement the session management so pages under the /my path are only accessible to logged in users. (implement all the repeated login, and logout mechanism).
+
+When the user logs in for the first time using GitHub fetch the user information and also the list of repositories and store it in our database connecting this information with the access token.
+Later the updating of the list of repositories should be handled by a separate job that runs without the web server.
+
 
 ## docs
 
