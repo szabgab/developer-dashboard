@@ -8,7 +8,11 @@ use List::Util qw(sum0);
 use Data::Dumper qw(Dumper);
 use YAML qw(Load);
 
+use lib 'lib';
+use DDB::GitHub;
+
 my $config = Load( path('config.yml')->slurp );
+#app->secrets([$config->{mojo_secret}]);
 
 get '/' => sub ($c) {
     $c->render(template => 'main', github_client_id => $config->{github_client_id});
@@ -39,7 +43,7 @@ get '/cb/github' => sub ($c) {
     $c->app->log->debug("session_code: $session_code");
 
     # TODO verify that the github_client_id and github_client_secret exist
-    # TODO: provide proper error message to the user if this step fails.
+    # TODO provide proper error message to the user if this step fails.
     my $ua  = Mojo::UserAgent->new();
     my $url = 'https://github.com/login/oauth/access_token';
     my %data = (
@@ -51,9 +55,34 @@ get '/cb/github' => sub ($c) {
     $c->app->log->debug($res->is_success);
     $c->app->log->debug($res->message);
     # { 'token_type' => 'bearer', 'scope' => 'user:email', 'access_token' => '123' };
+    # TODO verify that we got a response, verify the scope
     $c->app->log->debug(Dumper $res->json);
-    $c->render(text => Dumper $res->json);
-    #my $access_token = $res->json{'access_token'};
+    my $access_token = $res->json->{'access_token'};
+    my $gh = DDB::GitHub->new($access_token);
+    my $user = $gh->user;
+    ## $gh->get_repos;
+    $c->session(github => $user->{login});
+    $c->redirect_to('/my');
+};
+
+group {
+    my @systems = qw(github);
+    under sub($c) {
+        for my $system (@systems) {
+            return 1 if $c->session($system);
+        }
+        $c->redirect_to('/');
+        return undef;
+    };
+    get '/my' => sub ($c) {
+        $c->render(template => 'my');
+    };
+    get '/my/logout' => sub ($c) {
+        for my $system (@systems) {
+            $c->session($system => undef);
+        }
+        $c->redirect_to('/');
+    };
 };
 
 app->start;

@@ -36,19 +36,13 @@ docker-compose run web bash
 ## Plans
 
 * Fetch the list of repos and store some of the returned data
-   - hompage
-   - forks
-   - open_issues
-   - name  or full_name
-   - language
 * For each repo that has pushed_at more recent since our last update of that project
 
 * [Get community profile metrics](https://docs.github.com/en/rest/reference/repos#get-community-profile-metrics)
 
 * GET /repos/:owner/:repo/git/commits/:sha
 
-
-login using GitHub on the response store the access token in the session and also store it in our "database" so we can use it even without the user being present.
+Login using GitHub on the response store the access token in the session and also store it in our "database" so we can use it even without the user being present.
 Implement the session management so pages under the /my path are only accessible to logged in users. (implement all the repeated login, and logout mechanism).
 
 When the user logs in for the first time using GitHub fetch the user information and also the list of repositories and store it in our database connecting this information with the access token.

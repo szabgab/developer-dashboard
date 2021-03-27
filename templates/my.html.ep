@@ -1,0 +1,5 @@
+% title "My";
+% layout 'dashboard';
+
+<a href="/my/logout">logout from everything</a>
+
