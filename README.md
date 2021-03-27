@@ -48,6 +48,12 @@ Implement the session management so pages under the /my path are only accessible
 When the user logs in for the first time using GitHub fetch the user information and also the list of repositories and store it in our database connecting this information with the access token.
 Later the updating of the list of repositories should be handled by a separate job that runs without the web server.
 
+When a logged in user arrives the session should contain the GitHub user ID and we need to be able to look up the information about the user based on the username.
+When the user logs in again, we fetch the user information from GitHub that contains the username. Store that username in the session and all the data in the database.
+We also need to store the access token in the database.  data/github/users/$username.json
+
+data/github/repos/$username.json
+
 
 ## docs
 

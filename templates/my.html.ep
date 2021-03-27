@@ -1,5 +1,41 @@
 % title "My";
 % layout 'dashboard';
 
-<a href="/my/logout">logout from everything</a>
+<% if ($logged_in) { %>
+    <a href="/my/logout">logout from everything</a>
+<% } %>
+
+<h2>GitHub</h2>
+<% if ($user->{github}) { %>
+    <% if ($user->{github}{avatar_url}) { %>
+       <img class="avatar" src="<%= $user->{github}{avatar_url} %>">
+    <% } %>
+
+    <%= $user->{github}{name} %>
+    <p>
+
+    <a href="<%= $user->{github}{html_url} %>"><%= $user->{github}{login} %></a><br>
+    Following: <%= $user->{github}{following} %><br>
+    Bio: <%= $user->{github}{bio} %><br>
+    Blog: <%= $user->{github}{blog} %><br>
+    Followers: <%= $user->{github}{followers} %><br>
+    Public repos: <%= $user->{github}{public_repos} %><br>
+    Company: <%= $user->{github}{company} %><br>
+
+    <% if ($user->{github}{twitter_username}) { %>
+        <a href="https://twitter.com/<%= $user->{github}{twitter_username} %>">@<%= $user->{github}{twitter_username} %></a>
+    <% } %>
+
+<% } else { %>
+    <div>
+    <a href="https://github.com/login/oauth/authorize?scope=user:email&client_id=<%= $github_client_id %>">Login with GitHub</a></a>
+    </div>
+<% } %>
+
+<h2>GitLab</h2>
+<% if ($user->{gitlab}) { %>
+    <%= join ' ', keys %{$user->{gitlab}} %>
+<% } else { %>
+    Login to GitLab (TBD)
+<% } %>
 

@@ -11,11 +11,13 @@ use YAML qw(Load);
 use lib 'lib';
 use DDB::GitHub;
 
+my @systems = qw(github);
+
 my $config = Load( path('config.yml')->slurp );
 #app->secrets([$config->{mojo_secret}]);
 
 get '/' => sub ($c) {
-    $c->render(template => 'main', github_client_id => $config->{github_client_id});
+    $c->render(template => 'main');
 };
 
 get '/github' => sub ($c) {
@@ -60,13 +62,36 @@ get '/cb/github' => sub ($c) {
     my $access_token = $res->json->{'access_token'};
     my $gh = DDB::GitHub->new($access_token);
     my $user = $gh->user;
+    my $username = $user->{login};
+    $user->{access_token} = $access_token;
+
+    path('data/github/users')->mkpath;
+    my $user_file = "data/github/users/$username.json";
+    path($user_file)->spew_utf8(encode_json($user));
     ## $gh->get_repos;
-    $c->session(github => $user->{login});
+    $c->session(github => $username);
     $c->redirect_to('/my');
 };
 
+get '/my' => sub ($c) {
+    my %data;
+    my $logged_in = 0;
+    for my $system (@systems) {
+        my $username = $c->session($system);
+        my $user_file = "data/$system/users/$username.json";
+        if (-e $user_file) {
+            $data{$system} = decode_json(path($user_file)->slurp_utf8);
+            $logged_in = 1;
+        }
+    }
+    $c->render(template => 'my',
+        user => \%data,
+        github_client_id => $config->{github_client_id},
+        logged_in => $logged_in,
+    );
+};
+
 group {
-    my @systems = qw(github);
     under sub($c) {
         for my $system (@systems) {
             return 1 if $c->session($system);
@@ -74,9 +99,7 @@ group {
         $c->redirect_to('/');
         return undef;
     };
-    get '/my' => sub ($c) {
-        $c->render(template => 'my');
-    };
+    # TODO logout from one specific service
     get '/my/logout' => sub ($c) {
         for my $system (@systems) {
             $c->session($system => undef);
