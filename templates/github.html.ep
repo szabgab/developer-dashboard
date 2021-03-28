@@ -1,0 +1,47 @@
+% title "Dashboard of " . ($user->{name} // $name);
+% layout 'dashboard';
+
+<a href="https://github.com/<%= $name %>">
+    <img class="avatar" src="<%= $user->{avatar_url} %>">
+    <%= $user->{name} %>
+</a>
+
+<% if ($user->{twitter_username}) { %>
+    <a href="https://twitter.com/<%= $user->{twitter_username} %>">@<%= $user->{twitter_username} %></a>
+<% } %>
+
+<h2>Repositories</h2>
+
+Public repos: <%= $user->{public_repos} %><br>
+Listed here: <%= scalar @$repos %> <br>
+Open issues: <%= $open_issues %><br>
+
+<div class="table-container">
+<table class="table is-hoverable">
+  <thead>
+    <tr>
+      <th>Repo</th>
+      <th>Homepage</th>
+      <th>Fork</th>
+      <th>Issues</th>
+      <th>Description</th>
+      <th>default branch</th>
+      <th>Pushed AT</th>
+    </tr>
+  </thead>
+  <tbody>
+<% for my $repo (@$repos) { %>
+    <tr>
+      <td><a href="https://github.com/<%= $repo->{full_name} %>"><%= $repo->{full_name} %></a></td>
+      <td><a href="<%= $repo->{homepage} %>"><%= $repo->{homepage} %></a></td>
+      <td><% if ($repo->{fork}) { %>1<% } %></td>
+      <td><%= $repo->{open_issues} %></td>
+      <td><%= $repo->{description} %></td>
+      <td><%= $repo->{default_branch} %></td>
+      <td><%= $repo->{pushed_at} %></td>
+    </tr>
+<% } %>
+  </tbody>
+</table>
+</div>
+

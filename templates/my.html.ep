@@ -7,6 +7,8 @@
 
 <h2>GitHub</h2>
 <% if ($user->{github}) { %>
+    <a href="/my/github">Repositories</a>
+    <p>
     <% if ($user->{github}{avatar_url}) { %>
        <img class="avatar" src="<%= $user->{github}{avatar_url} %>">
     <% } %>

@@ -7,6 +7,7 @@ use Mojo::UserAgent;
 use List::Util qw(sum0);
 use Data::Dumper qw(Dumper);
 use YAML qw(Load);
+use Mojo::Home;
 
 use lib 'lib';
 use DDB::GitHub;
@@ -100,6 +101,26 @@ group {
         $c->redirect_to('/');
         return undef;
     };
+    get '/my/github' => sub ($c) {
+        my $username = $c->session('github');
+
+        my $home = Mojo::Home->new;
+        $home->detect;
+        my $user_file = $home->child('data', 'github', 'users', "$username.json");
+        my $user = decode_json($user_file->slurp);
+
+        my $repos_file = $home->child('data', 'github', 'repos', "$username.json");
+        my $repos = decode_json($repos_file->slurp);
+        my $open_issues = sum0 map {$_->{open_issues}} @$repos;
+        $c->render(template => 'github',
+            name => $username,
+            user => $user,
+            repos => $repos,
+            open_issues => $open_issues,
+        );
+    };
+
+
     # TODO logout from one specific service
     get '/my/logout' => sub ($c) {
         for my $system (@systems) {
