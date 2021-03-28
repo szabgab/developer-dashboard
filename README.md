@@ -51,8 +51,15 @@ Later the updating of the list of repositories should be handled by a separate j
 When a logged in user arrives the session should contain the GitHub user ID and we need to be able to look up the information about the user based on the username.
 When the user logs in again, we fetch the user information from GitHub that contains the username. Store that username in the session and all the data in the database.
 We also need to store the access token in the database.  data/github/users/$username.json
+Fetch repos and save them to data/github/repos/$username.json
 
-data/github/repos/$username.json
+* Have a button to update repo list (or shall we do this periodically or can we set up an event on GitHub to notify us when there is a new repo?)
+* replace path by Mojo:File
+* use app->home as root directory Mojo::Home
+* Get list of organizations I belong to
+* List all the issues
+* Fetch list of pull requests
+
 
 
 ## docs
