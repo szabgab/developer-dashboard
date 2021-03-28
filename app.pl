@@ -61,14 +61,14 @@ get '/cb/github' => sub ($c) {
     $c->app->log->debug(Dumper $res->json);
     my $access_token = $res->json->{'access_token'};
     my $gh = DDB::GitHub->new($access_token);
-    my $user = $gh->user;
+
+    my $user = $gh->get_user;
     my $username = $user->{login};
     $user->{access_token} = $access_token;
 
-    path('data/github/users')->mkpath;
-    my $user_file = "data/github/users/$username.json";
-    path($user_file)->spew_utf8(encode_json($user));
-    ## $gh->get_repos;
+    $gh->save_user($user);
+    $gh->update_repos($username);
+
     $c->session(github => $username);
     $c->redirect_to('/my');
 };
@@ -83,6 +83,7 @@ get '/my' => sub ($c) {
             $data{$system} = decode_json(path($user_file)->slurp_utf8);
             $logged_in = 1;
         }
+
     }
     $c->render(template => 'my',
         user => \%data,
