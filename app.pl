@@ -14,7 +14,9 @@ use DDB::GitHub;
 
 my @systems = qw(github);
 
-my $config = Load( path('config.yml')->slurp );
+my $home = Mojo::Home->new;
+$home->detect;
+my $config = Load( $home->child('config.yml')->slurp );
 #app->secrets([$config->{mojo_secret}]);
 
 get '/' => sub ($c) {
