@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "bulma": "^0.9.4",
+    "bulma": "^1.0.4",
     "node-sass": "^8.0.0"
   }
 }
